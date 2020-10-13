@@ -12,13 +12,13 @@ class LineSegment():
         Parameters
         ----------
         x1: array_like
-            x values of start points in pixels. This corresponds to the azimuth axis.
+            x values of start points in pixels.
         x2: array_like
-            x values of end points in pixels. This corresponds to the azimuth axis.
+            x values of end points in pixels.
         y1: array_like
-            y values of start points in pixels. This corresponds to the time axis.
+            y values of start points in pixels.
         y2: array_like
-            y values of end points in pixels. This corresponds to the time axis.
+            y values of end points in pixels.
         """
         x1, x2, y1, y2 = np.array(x1), np.array(x2), np.array(y1), np.array(y2)
         index = np.arange(x1.size)
@@ -26,7 +26,7 @@ class LineSegment():
         x2 = xr.DataArray(x2, name="x2", dims=('i'), coords={'i':index}, attrs={'units':"1"})
         y1 = xr.DataArray(y1, name="y1", dims=('i'), coords={'i':index}, attrs={'units':"1"})
         y2 = xr.DataArray(y2, name="y2", dims=('i'), coords={'i':index}, attrs={'units':"1"})
-        self.lines = xr.Dataset(data_vars={'x1': x1, 'y1': y1, 'x2': x2, 'y2': y2}, attrs=None)
+        self.lines = xr.Dataset(data_vars={'x1': x1, 'x2': x2, 'y1': y1, 'y2': y2}, attrs=None)
 
     def __str__(self):
         return str(self.lines)
@@ -41,7 +41,13 @@ class LineSegment():
         self.lines[key] = value
 
     def __len__(self):
-        return len(self.lines)
+        return len(self.lines.i)
+
+    def __add__(self, other):
+        other.lines = other.lines.assign_coords({"i": other.lines["i"] + self.lines.i.max() + 1})
+        new_ls = copy.deepcopy(self)
+        new_ls.lines = xr.concat([new_ls.lines, other.lines], dim="i")
+        return new_ls
 
     def sel(self, **kwargs):
         return self.lines.sel(kwargs)
@@ -76,6 +82,9 @@ class LineSegment():
     @property
     def attrs(self):
         return self.lines.attrs
+    @property
+    def size(self):
+        return len(self)
 
     @staticmethod
     def from_netcdf(nc_name):

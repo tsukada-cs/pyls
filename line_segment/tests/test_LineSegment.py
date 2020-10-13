@@ -14,7 +14,21 @@ class TestLineSegment(unittest.TestCase):
         self.assertEqual(list(ls.lines["x2"]), x2)
         self.assertEqual(list(ls.lines["y1"]), y1)
         self.assertEqual(list(ls.lines["y2"]), y2)
+        self.assertEqual(len(ls), 2)
 
+    def test__add__(self, *mocks):
+        from line_segment import LineSegment
+        x1 = [0,1]
+        x2 = [2,3]
+        y1 = [4,5]
+        y2 = [6,7]
+        ls1 = LineSegment(x1, x2, y1, y2)
+        ls2 = LineSegment(x2, x1, y2, y1)
+        self.assertEqual(list((ls1 + ls2).lines["x1"]), [0,1,2,3])
+        self.assertEqual(list((ls1 + ls2).lines["x2"]), [2,3,0,1])
+        self.assertEqual(list((ls1 + ls2).lines["y1"]), [4,5,6,7])
+        self.assertEqual(list((ls1 + ls2).lines["y2"]), [6,7,4,5])
+        
     def test_length(self, *mocks):
         from line_segment import LineSegment
         x1 = [0,2]
