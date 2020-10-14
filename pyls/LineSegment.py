@@ -209,6 +209,105 @@ class LineSegment():
         new_ls.lines = new_ls.lines.isel(i=range_index)
         return new_ls
 
+    def limit_x(self, xmin=None, xmax=None, crop=True):
+        """
+        Returns a LineSegment consisting only of line segments with limited x.
+        
+        Parameters
+        ----------
+        xmin: int or float
+            Minimum x.
+        xmax: int or float
+            Maximum x.
+        crop: bool, default True
+            If true, the line segment is cropped to fit within the time range.
+
+        Returns
+        -------
+        new_ls: LineSegment
+
+        See Also
+        --------
+        limit_xy
+        """
+        return self.limit_xy("x", xymin=xmin, xymax=xmax, crop=crop)
+
+    def limit_y(self, ymin=None, ymax=None, crop=True):
+        """
+        Returns a LineSegment consisting only of line segments with limited y.
+        
+        Parameters
+        ----------
+        ymin: int or float
+            Minimum y.
+        ymax: int or float
+            Maximum y.
+        crop: bool, default True
+            If true, the line segment is cropped to fit within the time range.
+
+        Returns
+        -------
+        new_ls: LineSegment
+
+        See Also
+        --------
+        limit_xy
+        """
+        return self.limit_xy("y", xymin=ymin, xymax=ymax, crop=crop)
+
+    def limit_xy(self, which, xymin=None, xymax=None, crop=True):
+        """
+        Returns a LineSegment consisting only of line segments with limited x or y.
+        
+        Parameters
+        ----------
+        which: str
+           Whether to limit "x" or "y".
+        xymin: int or float
+            Minimum x or y.
+        xymax: int or float
+            Maximum x or y.
+        crop: bool, default True
+            If true, the line segment is cropped to fit within the time range.
+
+        Returns
+        -------
+        new_ls: LineSegment
+        """
+        if which not in ("x", "y"):
+            raise ValueError("which must be 'x' or 'y'.")
+        if xymin is xymax is None:
+            raise ValueError("xymin or xymax must not be None")
+        a1 = {"x":"x1", "y":"y1"}[which]
+        a2 = {"x":"x2", "y":"y2"}[which]
+        b1 = {"x":"y1", "y":"x1"}[which]
+        b2 = {"x":"y2", "y":"x2"}[which]
+
+        new_ls = self.sort(which, large_2=True)
+
+        end_before_min = np.zeros_like(new_ls.lines.i, bool)
+        if xymax is None:
+            xymax = max(new_ls.lines[a2].values)
+        if xymin is None:
+            xymin = min(new_ls.lines[a1].values)
+        start_after_max = (new_ls.lines[a1].values > xymax)
+        end_before_min = (new_ls.lines[a2].values < xymin)
+        across_index = ~(start_after_max + end_before_min)
+        
+        new_ls.lines = new_ls.lines.isel(i=across_index)
+
+        if crop:
+            min_ratio = (xymin-new_ls.lines[a1])/(new_ls.lines[a2]-new_ls.lines[a1])
+            max_ratio = (xymax-new_ls.lines[a1])/(new_ls.lines[a2]-new_ls.lines[a1])
+            min_ind = new_ls.lines[a1] < xymin
+            max_ind = new_ls.lines[a2] > xymax
+            new_ls.lines[a1][min_ind] = xymin
+            new_ls.lines[a2][max_ind] = xymax
+            cropped_b1 = new_ls.lines[b1][min_ind] + (new_ls.lines[b2]-new_ls.lines[b1])[min_ind]*min_ratio[min_ind]
+            cropped_b2 = new_ls.lines[b1][max_ind] + (new_ls.lines[b2]-new_ls.lines[b1])[max_ind]*max_ratio[max_ind]
+            new_ls.lines[b1][min_ind], new_ls.lines[b2][max_ind] = cropped_b1, cropped_b2
+        return new_ls
+
     def sort(self, which="y", large_2=True):
         if large_2:
             large = which + "2"
