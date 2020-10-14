@@ -184,6 +184,7 @@ class LineSegment():
         Returns
         -------
         new_ls: LineSegment
+            Limited LineSegment.
         """
         if min_value is max_value is None:
             raise ValueError("min_value or max_value must not be None")
@@ -225,6 +226,7 @@ class LineSegment():
         Returns
         -------
         new_ls: LineSegment
+            Limited LineSegment.
 
         See Also
         --------
@@ -248,6 +250,7 @@ class LineSegment():
         Returns
         -------
         new_ls: LineSegment
+            Limited LineSegment.
 
         See Also
         --------
@@ -273,6 +276,7 @@ class LineSegment():
         Returns
         -------
         new_ls: LineSegment
+            Limited LineSegment.
         """
         if which not in ("x", "y"):
             raise ValueError("which must be 'x' or 'y'.")
@@ -309,6 +313,21 @@ class LineSegment():
         return new_ls
 
     def sort(self, which="y", large_2=True):
+        """
+        Sorting the start and end points of a line segment.
+
+        Parameters
+        ----------
+        which : str, default "y"
+            Whether to sort "x" or "y".
+        large_2 : bool, default True
+            If true, sort for larger endpoints.
+        
+        Returns
+        -------
+        new_ls: LineSegment
+            Sorted LineSegment.
+        """
         if large_2:
             large = which + "2"
             small = which + "1"
