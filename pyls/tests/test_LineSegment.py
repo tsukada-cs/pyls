@@ -4,7 +4,7 @@ from unittest import mock
 class TestLineSegment(unittest.TestCase):
     """Test the LineSegment class."""
     def test__init__(self, *mocks):
-        from line_segment import LineSegment
+        from pyls import LineSegment
         x1 = [0,2]
         x2 = [0,2]
         y1 = [1,3]
@@ -17,7 +17,7 @@ class TestLineSegment(unittest.TestCase):
         self.assertEqual(len(ls), 2)
 
     def test__add__(self, *mocks):
-        from line_segment import LineSegment
+        from pyls import LineSegment
         x1 = [0,1]
         x2 = [2,3]
         y1 = [4,5]
@@ -30,7 +30,7 @@ class TestLineSegment(unittest.TestCase):
         self.assertEqual(list((ls1 + ls2).lines["y2"]), [6,7,4,5])
         
     def test_length(self, *mocks):
-        from line_segment import LineSegment
+        from pyls import LineSegment
         x1 = [0,2]
         x2 = [0,2]
         y1 = [0,5]
@@ -39,7 +39,7 @@ class TestLineSegment(unittest.TestCase):
         self.assertEqual(list(ls.length), [1, 3])
 
     def test_x_length(self, *mocks):
-        from line_segment import LineSegment
+        from pyls import LineSegment
         x1 = [0,2]
         x2 = [0,2]
         y1 = [0,5]
@@ -48,7 +48,7 @@ class TestLineSegment(unittest.TestCase):
         self.assertEqual(list(ls.x_length), [0, 0])
 
     def test_y_length(self, *mocks):
-        from line_segment import LineSegment
+        from pyls import LineSegment
         x1 = [0,2]
         x2 = [0,2]
         y1 = [0,5]
@@ -58,7 +58,7 @@ class TestLineSegment(unittest.TestCase):
 
     def test_get_left(self, *mocks):
         import numpy as np
-        from line_segment import LineSegment
+        from pyls import LineSegment
         img = np.array([
             [0,1,2],
             [3,4,5],
@@ -73,7 +73,7 @@ class TestLineSegment(unittest.TestCase):
         
     def test_get_right(self, *mocks):
         import numpy as np
-        from line_segment import LineSegment
+        from pyls import LineSegment
         img = np.array([
             [0,1,2],
             [3,4,5],
@@ -88,7 +88,7 @@ class TestLineSegment(unittest.TestCase):
         
     def test_get_center(self, *mocks):
         import numpy as np
-        from line_segment import LineSegment
+        from pyls import LineSegment
         img = np.array([
             [0,1,2],
             [3,4,5],
@@ -103,7 +103,7 @@ class TestLineSegment(unittest.TestCase):
 
     def test_get_high(self, *mocks):
         import numpy as np
-        from line_segment import LineSegment
+        from pyls import LineSegment
         img = np.array([
             [0,1,2],
             [3,4,5],
@@ -118,7 +118,7 @@ class TestLineSegment(unittest.TestCase):
 
     def test_get_low(self, *mocks):
         import numpy as np
-        from line_segment import LineSegment
+        from pyls import LineSegment
         img = np.array([
             [0,1,2],
             [3,4,5],
@@ -133,7 +133,7 @@ class TestLineSegment(unittest.TestCase):
 
     def test_limit_value_min(self, *mocks):
         import numpy as np
-        from line_segment import LineSegment
+        from pyls import LineSegment
         img = np.array([
             [0,1,2],
             [3,4,5],
@@ -152,7 +152,7 @@ class TestLineSegment(unittest.TestCase):
 
     def test_limit_value_max(self, *mocks):
         import numpy as np
-        from line_segment import LineSegment
+        from pyls import LineSegment
         img = np.array([
             [0,1,2],
             [3,4,5],
@@ -171,7 +171,7 @@ class TestLineSegment(unittest.TestCase):
 
     def test_sort_x(self, *mocks):
         import numpy as np
-        from line_segment import LineSegment
+        from pyls import LineSegment
         x1 = [3,2]
         x2 = [1,3]
         y1 = [0,0]
@@ -184,7 +184,7 @@ class TestLineSegment(unittest.TestCase):
         self.assertEqual(list(ls.lines["y2"]), [0,2])
 
     def test_sort_y(self, *mocks):
-        from line_segment import LineSegment
+        from pyls import LineSegment
         x1 = [3,2]
         x2 = [1,3]
         y1 = [0,0]
