@@ -91,6 +91,8 @@ class LineSegment():
         da = xr.open_dataset(nc_name)
         return LineSegment(x1=da.x1.values, y1=da.y1.values, x2=da.x2.values, y2=da.y2.values)
 
+    def cyclization(self, axis, )
+
     def get_left(self, img, gap=1.0):
         """
         Returns the values at positions along the line segment that are only a gap pixel to the left.
@@ -258,13 +260,13 @@ class LineSegment():
         """
         return self.limit_xy("y", xymin=ymin, xymax=ymax, crop=crop)
 
-    def limit_xy(self, which, xymin=None, xymax=None, crop=True):
+    def limit_xy(self, axis, xymin=None, xymax=None, crop=True):
         """
         Returns a LineSegment consisting only of line segments with limited x or y.
         
         Parameters
         ----------
-        which: str
+        axis: str
            Whether to limit "x" or "y".
         xymin: int or float
             Minimum x or y.
@@ -278,16 +280,16 @@ class LineSegment():
         new_ls: LineSegment
             Limited LineSegment.
         """
-        if which not in ("x", "y"):
-            raise ValueError("which must be 'x' or 'y'.")
+        if axis not in ("x", "y"):
+            raise ValueError("axis must be 'x' or 'y'.")
         if xymin is xymax is None:
             raise ValueError("xymin or xymax must not be None")
-        a1 = {"x":"x1", "y":"y1"}[which]
-        a2 = {"x":"x2", "y":"y2"}[which]
-        b1 = {"x":"y1", "y":"x1"}[which]
-        b2 = {"x":"y2", "y":"x2"}[which]
+        a1 = {"x":"x1", "y":"y1"}[axis]
+        a2 = {"x":"x2", "y":"y2"}[axis]
+        b1 = {"x":"y1", "y":"x1"}[axis]
+        b2 = {"x":"y2", "y":"x2"}[axis]
 
-        new_ls = self.sort(which, large_2=True)
+        new_ls = self.sort(axis, large_2=True)
 
         end_before_min = np.zeros_like(new_ls.lines.i, bool)
         if xymax is None:
@@ -312,13 +314,13 @@ class LineSegment():
             new_ls.lines[b1][min_ind], new_ls.lines[b2][max_ind] = cropped_b1, cropped_b2
         return new_ls
 
-    def sort(self, which="y", large_2=True):
+    def sort(self, axis="y", large_2=True):
         """
         Sorting the start and end points of a line segment.
 
         Parameters
         ----------
-        which : str, default "y"
+        axis : str, default "y"
             Whether to sort "x" or "y".
         large_2 : bool, default True
             If true, sort for larger endpoints.
@@ -329,11 +331,11 @@ class LineSegment():
             Sorted LineSegment.
         """
         if large_2:
-            large = which + "2"
-            small = which + "1"
+            large = axis + "2"
+            small = axis + "1"
         else:
-            large = which + "1"
-            small = which + "2"
+            large = axis + "1"
+            small = axis + "2"
         swap_index = self.lines[small] > self.lines[large]
         new_ls = copy.deepcopy(self)
         new_ls.lines["x1"][swap_index] = self.lines["x2"][swap_index]
