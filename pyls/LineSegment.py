@@ -91,7 +91,14 @@ class LineSegment():
         da = xr.open_dataset(nc_name)
         return LineSegment(x1=da.x1.values, y1=da.y1.values, x2=da.x2.values, y2=da.y2.values)
 
-    def cyclization(self, axis, )
+    def cyclization(self, x_cyclic=False, y_cyclic=False, xmin=None, xmax=None, ymin=None, ymax=None):
+        if x_cyclic and y_cyclic is False:
+            return self
+        
+        from pyls import LineSegmentCyclic
+        return LineSegmentCyclic(self.x1, self.x2, self.y1, self.y2, x_cyclic=x_cyclic, y_cyclic=y_cyclic,
+                                 xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
+
 
     def get_left(self, img, gap=1.0):
         """
