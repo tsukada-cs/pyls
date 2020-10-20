@@ -117,8 +117,10 @@ class LineSegment():
             angle = np.arctan2(y2-y1, x2-x1)
             x10L = np.round(x10 - gap * np.cos(angle + np.pi/2)).astype(int)
             y10L = np.round(y10 - gap * np.sin(angle + np.pi/2)).astype(int)
+            x10L_inboard = np.logical_and(x10L >= 0, x10L < img.shape[1])
             y10L_inboard = np.logical_and(y10L >= 0, y10L < img.shape[0])
-            x10L, y10L = x10L[y10L_inboard], y10L[y10L_inboard]
+            x10L = x10L[x10L_inboard * y10L_inboard]
+            y10L = y10L[x10L_inboard * y10L_inboard]
             left.values[i] = img[y10L, x10L].mean()
         return left
 
@@ -139,8 +141,10 @@ class LineSegment():
             angle = np.arctan2(y2-y1, x2-x1)
             x10R = np.round(x10 + gap * np.cos(angle + np.pi/2)).astype(int)
             y10R = np.round(y10 + gap * np.sin(angle + np.pi/2)).astype(int)
+            x10R_inboard = np.logical_and(x10R >= 0, x10R < img.shape[1])
             y10R_inboard = np.logical_and(y10R >= 0, y10R < img.shape[0])
-            x10R, y10R = x10R[y10R_inboard], y10R[y10R_inboard]
+            x10R = x10R[x10R_inboard * y10R_inboard]
+            y10R = y10R[x10R_inboard * y10R_inboard]
             right.values[i] = img[y10R, x10R].mean()
         return right
 
