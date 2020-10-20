@@ -115,7 +115,7 @@ class LineSegment():
         for i, (x1, y1, x2, y2) in enumerate(zip(self.x1.values, self.y1.values, self.x2.values, self.y2.values)):
             x10, y10 = np.linspace(x1, x2, 10), np.linspace(y1, y2, 10)
             angle = np.arctan2(y2-y1, x2-x1)
-            x10L = np.round(x10 - gap * np.cos(angle + np.pi/2)).astype(int) % img.shape[1]
+            x10L = np.round(x10 - gap * np.cos(angle + np.pi/2)).astype(int)
             y10L = np.round(y10 - gap * np.sin(angle + np.pi/2)).astype(int)
             y10L_inboard = np.logical_and(y10L >= 0, y10L < img.shape[0])
             x10L, y10L = x10L[y10L_inboard], y10L[y10L_inboard]
@@ -137,7 +137,7 @@ class LineSegment():
         for i, (x1, y1, x2, y2) in enumerate(zip(self.x1.values, self.y1.values, self.x2.values, self.y2.values)):
             x10, y10 = np.linspace(x1, x2, 10), np.linspace(y1, y2, 10)
             angle = np.arctan2(y2-y1, x2-x1)
-            x10R = np.round(x10 + gap * np.cos(angle + np.pi/2)).astype(int) % img.shape[1]
+            x10R = np.round(x10 + gap * np.cos(angle + np.pi/2)).astype(int)
             y10R = np.round(y10 + gap * np.sin(angle + np.pi/2)).astype(int)
             y10R_inboard = np.logical_and(y10R >= 0, y10R < img.shape[0])
             x10R, y10R = x10R[y10R_inboard], y10R[y10R_inboard]
